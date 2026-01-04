@@ -323,7 +323,7 @@ export default function Home() {
                 .map((activity, index) => (
                   <motion.div
                     key={activity.event_uuid}
-                    className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
                     initial={{ opacity: 0, y: 20 }}
                     animate={activitiesInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.2 * index }}
@@ -350,7 +350,7 @@ export default function Home() {
                         </span>
                       </div>
                     </div>
-                    <div className="p-6">
+                    <div className="p-6 flex flex-col flex-grow">
                       {/* Date and Time Row */}
                       <div className="flex items-center text-sm text-gray-500 mb-2 gap-4">
                         <div className="flex items-center">
@@ -379,33 +379,35 @@ export default function Home() {
                       <div className="flex items-center text-sm text-gray-500 mb-4">
                         <span>{activity.views || 0} views</span>
                       </div>
-                      <Link
-                        href={`/events/${activity.slug}`}
-                        onClick={async (e) => {
-                          // Fire-and-forget increment, don't block navigation
-                          try {
-                            const viewsEndpoint = activity.event_uuid 
-                              ? `/api/events/uuid/${activity.event_uuid}/views`
-                              : `/api/events/${activity.event_uuid}/views`;
-                            
-                            navigator.sendBeacon?.(
-                              viewsEndpoint,
-                              new Blob([], { type: "application/json" })
-                            ) ||
-                              fetch(viewsEndpoint, {
-                                method: "POST",
-                                keepalive: true,
-                              }).catch(() => {});
-                          } catch {}
-                        }}
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full text-[#004987] border-[#004987] hover:bg-[#004987] hover:text-white transition-colors duration-300"
+                      <div className="mt-auto">
+                        <Link
+                          href={`/events/${activity.slug}`}
+                          onClick={async (e) => {
+                            // Fire-and-forget increment, don't block navigation
+                            try {
+                              const viewsEndpoint = activity.event_uuid 
+                                ? `/api/events/uuid/${activity.event_uuid}/views`
+                                : `/api/events/${activity.event_uuid}/views`;
+                              
+                              navigator.sendBeacon?.(
+                                viewsEndpoint,
+                                new Blob([], { type: "application/json" })
+                              ) ||
+                                fetch(viewsEndpoint, {
+                                  method: "POST",
+                                  keepalive: true,
+                                }).catch(() => {});
+                            } catch {}
+                          }}
                         >
-                          View details
-                        </Button>
-                      </Link>
+                          <Button
+                            variant="outline"
+                            className="w-full text-[#004987] border-[#004987] hover:bg-[#004987] hover:text-white transition-colors duration-300"
+                          >
+                            View details
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -444,25 +446,12 @@ export default function Home() {
           </SectionAnimation>
 
           {partners.length > 0 && (
-            <div
-              className="overflow-hidden relative"
-              style={{
-                maskImage:
-                  "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-              }}
-            >
-              <div
-                className="flex animate-marquee-continuous"
-                style={{
-                  willChange: "transform",
-                  width: "max-content",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {[...marqueeItems, ...marqueeItems].map((p, index) => (
+            <div className="w-full flex justify-end">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-fit place-items-center">
+                {partnersToShow.map((p) => (
                   <div
-                    key={`marqueeC-${p.id}-${index}`}
-                    className="flex items-center justify-center p-2 mx-2 w-[140px] transition-transform duration-300 hover:scale-110 hover:shadow-xl"
+                    key={`partner-${p.id}`}
+                    className="flex items-center justify-center p-4 transition-transform duration-300 hover:scale-110 hover:shadow-xl"
                   >
                     <Image
                       src={
@@ -471,7 +460,7 @@ export default function Home() {
                           : "/" + p.logo
                       }
                       alt={p.name}
-                      width={140} 
+                      width={120} 
                       height={60}
                       className="object-contain transition-all"
                       sizes="140px"
