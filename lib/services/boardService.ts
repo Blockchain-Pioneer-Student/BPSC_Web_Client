@@ -17,7 +17,7 @@ class BoardService {
 
   async getAllBoards(): Promise<Board[]> {
     try {
-      const response = await fetch(`${this.baseURL}/boards/get-all`, {
+      const response = await fetch(`${this.baseURL}/boards`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

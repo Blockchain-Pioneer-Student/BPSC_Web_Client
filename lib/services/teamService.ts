@@ -172,7 +172,7 @@ export const teamService = {
         headers.Authorization = `Bearer ${authToken}`;
       }
       
-      const response = await fetch(`${API_BASE_URL}/members`, {
+      const response = await fetch(`${API_BASE_URL}/members/get-all`, {
         headers,
       });
       

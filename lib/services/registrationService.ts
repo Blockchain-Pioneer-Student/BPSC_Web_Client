@@ -51,8 +51,8 @@ class RegistrationService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data: BlockchainArea[] = await response.json();
-      return data;
+      const payload = await response.json();
+      return Array.isArray(payload) ? payload : payload.data || [];
     } catch (error) {
       console.error('Error fetching blockchain areas:', error);
       throw error;
