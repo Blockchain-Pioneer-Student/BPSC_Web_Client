@@ -15,7 +15,7 @@ export default function JoinPopup() {
         className="bg-white text-[#004987] hover:bg-gray-100 transition-all duration-300 hover:scale-105 w-auto self-center"
       >
         <span className="relative z-10 flex items-center gap-2 font-semibold">
-          Click me
+          Khám phá BPSC
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
         </span>
       </Button>
@@ -35,21 +35,21 @@ export default function JoinPopup() {
             {/* Content */}
             <div className="text-gray-800 space-y-4">
               <h2 className="text-xl font-bold text-blue-700 text-center">
-                🤖 Welcome to Blockchain Pioneer Student!
+                Chào mừng bạn đến với BPSC
               </h2>
               <p className="text-center">
-                We are a student community passionate about Blockchain & Web3!
+                Một cộng đồng sinh viên cùng học hỏi, nghiên cứu và xây dựng sản phẩm Blockchain & Web3.
               </p>
               <div className="space-y-1">
-                <p>🔥 Would you like to:</p>
+                <p>Bạn có thể:</p>
                 <ul className="list-decimal pl-5 text-left">
-                  <li>Join the community now?</li>
-                  <li>See recent activities?</li>
-                  <li>Connect with the team?</li>
+                  <li>Đăng ký tham gia câu lạc bộ</li>
+                  <li>Xem các hoạt động sắp tới</li>
+                  <li>Kết nối với đội ngũ BPSC</li>
                 </ul>
               </div>
               <p className="text-center">
-                👉 Choose an action below or message us via{" "}
+                Chọn một hướng phù hợp hoặc nhắn tin với chúng mình qua{" "}
                 <a
                   href="https://www.facebook.com/bpsclub.utc"
                   target="_blank"
@@ -57,7 +57,7 @@ export default function JoinPopup() {
                 >
                   Facebook
                 </a>
-                !
+                .
               </p>
             </div>
           </div>
