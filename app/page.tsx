@@ -10,7 +10,6 @@ import {
   Users,
   Award,
   LucideIcon,
-  ExternalLink,
   Clock,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -466,19 +465,6 @@ export default function Home() {
             </div>
           )}
 
-          <SectionAnimation delay={0.1}>
-            <div className="text-center mt-10">
-              <Link href="#">
-                <Button
-                  variant="link"
-                  className="text-[#004987] hover:scale-105 transition-transform duration-300"
-                >
-                  View all partners
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </SectionAnimation>
         </div>
       </section>
 
