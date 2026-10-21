@@ -126,6 +126,21 @@
     animation: marqueeContinuous 20s linear infinite;
   }
 
+  .partner-marquee-track {
+    animation: marqueeContinuous 28s linear infinite;
+    will-change: transform;
+  }
+
+  .partner-marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .partner-marquee-track {
+      animation-play-state: paused;
+    }
+  }
+
   .prose img {
     @apply mx-auto;
     display: block;

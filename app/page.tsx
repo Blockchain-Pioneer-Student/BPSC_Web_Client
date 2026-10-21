@@ -85,32 +85,9 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [partners, setPartners] = useState<Partner[]>([]);
   const partnersToShow = useMemo(() => partners.slice(0, 24), [partners]);
-  // Build a repeated list so marquee loops seamlessly even with few logos
+  // Duplicate the active set so the marquee can loop without a visible reset.
   const marqueeItems = useMemo(() => {
-    const base = partnersToShow.length > 0 ? partnersToShow : [];
-    const minItems = 12;
-    const targetLength = Math.max(minItems, base.length * 2);
-    const repeated: Partner[] = [];
-    for (let i = 0; i < targetLength; i++) {
-      repeated.push(
-        base[i % (base.length || 1)] || {
-          // Fallback in case base is empty
-          id: -1,
-          name: "",
-          logo: "/placeholder.svg",
-          type: "business" as const,
-          description: "",
-          website: "",
-          email: "",
-          phone: "",
-          address: "",
-          status: "active" as const,
-          created_at: "",
-          updated_at: "",
-        }
-      );
-    }
-    return repeated;
+    return [...partnersToShow, ...partnersToShow];
   }, [partnersToShow]);
 
   // Category list
@@ -445,14 +422,11 @@ export default function Home() {
             </div>
           </SectionAnimation>
 
-          {partners.length > 0 && (
-            <div className="w-full flex justify-end">
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-fit place-items-center">
-                {partnersToShow.map((p) => (
-                  <div
-                    key={`partner-${p.id}`}
-                    className="flex items-center justify-center p-4 transition-transform duration-300 hover:scale-110 hover:shadow-xl"
-                  >
+          {partnersToShow.length > 0 && (
+            <div className="relative w-full overflow-hidden py-8" aria-label="Đối tác và nhà tài trợ">
+              <div className="partner-marquee-track flex w-max min-w-full items-center">
+                {marqueeItems.map((p, index) => {
+                  const logo = (
                     <Image
                       src={
                         p.logo?.startsWith("http") || p.logo?.startsWith("/")
@@ -460,13 +434,34 @@ export default function Home() {
                           : "/" + p.logo
                       }
                       alt={p.name}
-                      width={120} 
-                      height={60}
-                      className="object-contain transition-all"
-                      sizes="140px"
+                      width={150}
+                      height={76}
+                      className="max-h-[76px] w-auto object-contain"
+                      sizes="150px"
                     />
-                  </div>
-                ))}
+                  );
+
+                  return p.website ? (
+                    <a
+                      key={`partner-${p.id}-${index}`}
+                      href={p.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mx-8 flex h-24 w-36 shrink-0 items-center justify-center transition-transform duration-300 hover:scale-105"
+                      aria-label={p.name}
+                    >
+                      {logo}
+                    </a>
+                  ) : (
+                    <div
+                      key={`partner-${p.id}-${index}`}
+                      className="mx-8 flex h-24 w-36 shrink-0 items-center justify-center transition-transform duration-300 hover:scale-105"
+                      title={p.name}
+                    >
+                      {logo}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
