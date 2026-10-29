@@ -42,6 +42,7 @@ import {
   type MemberRole,
   type Board 
 } from "@/lib/services/teamService";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 // Component for rendering social icons with dynamic platform support
 const SocialIcon = ({ platform, url, size = "w-5 h-5" }: { platform: string; url: string; size?: string }) => {
@@ -111,6 +112,10 @@ const SocialIcon = ({ platform, url, size = "w-5 h-5" }: { platform: string; url
 };
 
 export default function TeamPage() {
+  const heroContent = useSiteContent("team_hero");
+  const heroImage = typeof heroContent.background_image_url === "string"
+    ? heroContent.background_image_url
+    : "";
   const [members, setMembers] = useState<Member[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState<{ [team: string]: number }>(
@@ -166,7 +171,11 @@ export default function TeamPage() {
   return (
     <div className="min-h-screen bg-white text-black">
       {/* Hero Section giống ảnh mẫu */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white overflow-hidden">
+      <section
+        className="relative py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white overflow-hidden"
+        style={heroImage ? { backgroundImage: `url("${encodeURI(heroImage)}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}
+      >
+        {heroImage && <div className="absolute inset-0 bg-[#00345f]/65 pointer-events-none" />}
         <div className="container relative z-10 px-4 md:px-6">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">
             Our team

@@ -16,9 +16,14 @@ import { useEvent } from "@/hooks/useEvent";
 import { FilterBar } from "@/components/filter-bar";
 import { EventCard } from "@/components/event-card";
 import { SkeletonCard } from "@/components/skeleton-card";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export default function EventsPage() {
   const router = useRouter();
+  const heroContent = useSiteContent("events_page");
+  const heroImage = typeof heroContent.background_image_url === "string"
+    ? heroContent.background_image_url
+    : "";
 
   const {
     events: eventData,
@@ -74,7 +79,11 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen">
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white overflow-hidden">
+      <section
+        className="relative py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white overflow-hidden"
+        style={heroImage ? { backgroundImage: `url("${encodeURI(heroImage)}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}
+      >
+        {heroImage && <div className="absolute inset-0 bg-[#00345f]/65 pointer-events-none" />}
         <motion.div
           className="absolute inset-0"
           initial={{ opacity: 0 }}
