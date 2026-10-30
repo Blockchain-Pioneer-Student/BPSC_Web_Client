@@ -74,6 +74,7 @@ export function PreviewProvider({ children }: { children: React.ReactNode }) {
 
     const adminOrigin =
       window.location.hostname === "localhost" ||
+      window.location.hostname === "https://admin.bpsclub.com" ||
       window.location.hostname === "127.0.0.1"
         ? `http://${window.location.hostname}:8080`
         : "https://admin-bpsclub.vercel.app";
