@@ -9,14 +9,45 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMobile } from "@/hooks/use-mobile";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export function SiteHeader() {
   const isMobile = useMobile();
   const pathname = usePathname();
+  const branding = useSiteContent("branding");
+  const navigation = useSiteContent("navigation");
+  const showNavigation = usePreviewVisible("navigation");
+  const previewText = (key: string, fallback: string) =>
+    typeof navigation[key] === "string" && navigation[key]
+      ? String(navigation[key])
+      : fallback;
+  const previewBranding = (key: string, fallback: string) =>
+    typeof branding[key] === "string" && branding[key]
+      ? String(branding[key])
+      : fallback;
+  const homeLabel = previewText("home_label", "Home");
+  const homeUrl = previewText("home_url", "/");
+  const aboutLabel = previewText("about_label", "About");
+  const aboutUrl = previewText("about_url", "/about");
+  const eventsLabel = previewText("events_label", "Events");
+  const eventsUrl = previewText("events_url", "/events");
+  const newsLabel = previewText("news_label", "News");
+  const newsUrl = previewText("news_url", "/blogs");
+  const teamLabel = previewText("team_label", "Team");
+  const teamUrl = previewText("team_url", "/team");
+  const contactLabel = previewText("contact_label", "Contact");
+  const contactUrl = previewText("contact_url", "/contact");
+  const joinLabel = previewText("join_label", "Join Club");
+  const joinUrl = previewText("join_url", "/join");
+  const logoUrl = previewBranding("header_logo_url", "/logo3.png");
+  const logoAlt = previewBranding("logo_alt", "Blockchain Pioneer Student Logo");
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
+    if (!showNavigation) return;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -33,7 +64,9 @@ export function SiteHeader() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, showNavigation]);
+
+  if (!showNavigation) return null;
 
   return (
     <header
@@ -43,8 +76,8 @@ export function SiteHeader() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Image
-            src="/logo3.png"
-            alt="Blockchain Pioneer Student Logo"
+            src={logoUrl}
+            alt={logoAlt}
             width={160}
             height={0}
             style={{ height: "auto" }}
@@ -62,35 +95,35 @@ export function SiteHeader() {
             <SheetContent side="right">
               <nav className="flex flex-col gap-4 mt-8">
                 <Link
-                  href="/"
+                  href={homeUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Home
+                  {homeLabel}
                 </Link>
                 <Link
-                  href="/about"
+                  href={aboutUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/about" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  About
+                  {aboutLabel}
                 </Link>
                 <Link
-                  href="/events"
+                  href={eventsUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/events" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Events
+                  {eventsLabel}
                 </Link>
                 <Link
-                  href="/blogs"
+                  href={newsUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/news" ? "text-[#004987] font-bold" : ""
                     }`}
-                >News</Link>
+                >{newsLabel}</Link>
                 {/* 
                 <Link
                   href="/news"
@@ -125,28 +158,28 @@ export function SiteHeader() {
                 </Link>
                 */}
                 <Link
-                  href="/team"
+                  href={teamUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/team" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Team
+                  {teamLabel}
                 </Link>
                 <Link
-                  href="/contact"
+                  href={contactUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/contact" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Contact
+                  {contactLabel}
                 </Link>
                 <Link
-                  href="/join"
+                  href={joinUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/join" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Join Club
+                  {joinLabel}
                 </Link>
               </nav>
             </SheetContent>
@@ -157,43 +190,43 @@ export function SiteHeader() {
               {/* Desktop & large tablet menu */}
               <nav className="hidden md:flex items-center gap-6">
                 <Link
-                  href="/"
+                  href={homeUrl}
                   scroll={true}
                   className={`text-sm font-medium transition-transform duration-200 hover:scale-105 hover:text-[#003b6d] active:text-[#002b52] ${pathname === "/"
                     ? "text-[#003b6d] font-bold"
                     : "text-[#004987]"
                     }`}
                 >
-                  Home
+                  {homeLabel}
                 </Link>
                 <Link
-                  href="/about"
+                  href={aboutUrl}
                   scroll={true}
                   className={`text-sm font-medium transition-transform duration-200 hover:scale-105 hover:text-[#003b6d] active:text-[#002b52] ${pathname === "/about"
                     ? "text-[#003b6d] font-bold"
                     : "text-[#004987]"
                     }`}
                 >
-                  About
+                  {aboutLabel}
                 </Link>
                 <Link
-                  href="/events"
+                  href={eventsUrl}
                   scroll={true}
                   className={`text-sm font-medium transition-transform duration-200 hover:scale-105 hover:text-[#003b6d] active:text-[#002b52] ${pathname === "/events"
                     ? "text-[#003b6d] font-bold"
                     : "text-[#004987]"
                     }`}
                 >
-                  Events
+                  {eventsLabel}
                 </Link>
                 <Link
-                  href="/blogs"
+                  href={newsUrl}
                   scroll={true}
                   className={`text-sm font-medium transition-transform duration-200 hover:scale-105 hover:text-[#003b6d] active:text-[#002b52] ${pathname === "/news"
                       ? "text-[#003b6d] font-bold"
                       : "text-[#004987]"
                     }`}
-                >News</Link>
+                >{newsLabel}</Link>
                 {/* 
                 <Link
                   href="/news"
@@ -234,52 +267,52 @@ export function SiteHeader() {
                 </Link>
                 */}
                 <Link
-                  href="/team"
+                  href={teamUrl}
                   scroll={true}
                   className={`text-sm font-medium transition-transform duration-200 hover:scale-105 hover:text-[#003b6d] active:text-[#002b52] ${pathname === "/team"
                     ? "text-[#003b6d] font-bold"
                     : "text-[#004987]"
                     }`}
                 >
-                  Team
+                  {teamLabel}
                 </Link>
                 <Link
-                  href="/contact"
+                  href={contactUrl}
                   scroll={true}
                   className={`text-sm font-medium transition-transform duration-200 hover:scale-105 hover:text-[#003b6d] active:text-[#002b52] ${pathname === "/contact"
                     ? "text-[#003b6d] font-bold"
                     : "text-[#004987]"
                     }`}
                 >
-                  Contact
+                  {contactLabel}
                 </Link>
               </nav>
 
               {/* Mobile & iPad menu (Sheet) */}
               <nav className="flex md:hidden flex-col gap-4 mt-8">
                 <Link
-                  href="/"
+                  href={homeUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Home
+                  {homeLabel}
                 </Link>
                 <Link
-                  href="/about"
+                  href={aboutUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/about" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  About
+                  {aboutLabel}
                 </Link>
                 <Link
-                  href="/events"
+                  href={eventsUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/events" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Events
+                  {eventsLabel}
                 </Link>
                 {/* 
                 <Link
@@ -315,38 +348,38 @@ export function SiteHeader() {
                 </Link>
                 */}
                 <Link
-                  href="/team"
+                  href={teamUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/team" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Team
+                  {teamLabel}
                 </Link>
                 <Link
-                  href="/contact"
+                  href={contactUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/contact" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Contact
+                  {contactLabel}
                 </Link>
                 <Link
-                  href="/join"
+                  href={joinUrl}
                   scroll={true}
                   className={`text-lg font-medium hover:text-[#004987] ${pathname === "/join" ? "text-[#004987] font-bold" : ""
                     }`}
                 >
-                  Join Club
+                  {joinLabel}
                 </Link>
               </nav>
             </div>
             <div>
-              <Link href="/join">
+              <Link href={joinUrl}>
                 <Button
                   className={`${pathname === "/join" ? "bg-[#003b6d]" : "bg-[#004987]"
                     } hover:bg-[#003b6d]`}
                 >
-                  Join Club
+                  {joinLabel}
                 </Button>
               </Link>
             </div>

@@ -31,11 +31,11 @@ import Image from "next/image";
 import { AnimatedDivider } from "@/components/ui/animated-section";
 import { contactService, contactUtils, type ContactFormData } from "@/lib/services/contactService";
 import {
-  siteContentService,
-  siteContentUtils,
   DEFAULT_CONTACT_CONTENT,
-  type ContactContent,
+  siteContentUtils,
 } from "@/lib/services/siteContentService";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { readSiteContent, useSiteContent } from "@/hooks/useSiteContent";
 
 export default function ContactPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -50,7 +50,49 @@ export default function ContactPage() {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [submitMessage, setSubmitMessage] = useState("");
-  const [content, setContent] = useState<ContactContent>(DEFAULT_CONTACT_CONTENT);
+  const hero = useSiteContent("contact_hero");
+  const info = useSiteContent("contact_info");
+  const location = useSiteContent("contact_location");
+  const faqDraft = useSiteContent("contact_faq");
+  const socials = useSiteContent("socials");
+  const showHero = usePreviewVisible("contact_hero");
+  const showInfo = usePreviewVisible("contact_info");
+  const showLocation = usePreviewVisible("contact_location");
+  const showFaq = usePreviewVisible("contact_faq");
+  const showSocials = usePreviewVisible("socials");
+  const content = {
+    hero: {
+      title: readSiteContent(hero, "title", DEFAULT_CONTACT_CONTENT.hero.title),
+      description: readSiteContent(hero, "description", DEFAULT_CONTACT_CONTENT.hero.description),
+    },
+    info: {
+      title: readSiteContent(info, "title", DEFAULT_CONTACT_CONTENT.info.title),
+      address: readSiteContent(info, "address", DEFAULT_CONTACT_CONTENT.info.address),
+      email: readSiteContent(info, "email", DEFAULT_CONTACT_CONTENT.info.email),
+      phone: readSiteContent(info, "phone", DEFAULT_CONTACT_CONTENT.info.phone),
+      connect_title: readSiteContent(info, "connect_title", DEFAULT_CONTACT_CONTENT.info.connect_title),
+    },
+    location: {
+      title: readSiteContent(location, "title", DEFAULT_CONTACT_CONTENT.location.title),
+      description: readSiteContent(location, "description", DEFAULT_CONTACT_CONTENT.location.description),
+      map_embed_url: readSiteContent(location, "map_embed_url", DEFAULT_CONTACT_CONTENT.location.map_embed_url),
+      directions_label: readSiteContent(location, "directions_label", DEFAULT_CONTACT_CONTENT.location.directions_label),
+      directions_url: readSiteContent(location, "directions_url", DEFAULT_CONTACT_CONTENT.location.directions_url),
+    },
+    faq: {
+      title: readSiteContent(faqDraft, "title", DEFAULT_CONTACT_CONTENT.faq.title),
+      items: DEFAULT_CONTACT_CONTENT.faq.items.map((item, index) => ({
+        question: readSiteContent(faqDraft, `q${index + 1}`, item.question),
+        answer: readSiteContent(faqDraft, `a${index + 1}`, item.answer),
+      })),
+    },
+    socials: {
+      facebook: readSiteContent(socials, "facebook", DEFAULT_CONTACT_CONTENT.socials.facebook),
+      linkedin: readSiteContent(socials, "linkedin", DEFAULT_CONTACT_CONTENT.socials.linkedin),
+      telegram: readSiteContent(socials, "telegram", DEFAULT_CONTACT_CONTENT.socials.telegram),
+      youtube: readSiteContent(socials, "youtube", DEFAULT_CONTACT_CONTENT.socials.youtube),
+    },
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,11 +101,6 @@ export default function ContactPage() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    siteContentService.getContactContent().then(setContent);
-  }, []);
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,7 +159,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Banner */}
-      <section className="relative w-full h-[300px] bg-gradient-to-r from-[#004987] via-[#0070b8] to-[#00a1e0] overflow-hidden">
+      {showHero && <section className="relative w-full h-[300px] bg-gradient-to-r from-[#004987] via-[#0070b8] to-[#00a1e0] overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0  bg-cover bg-center" />
         </div>
@@ -166,7 +203,7 @@ export default function ContactPage() {
             {content.hero.description}
           </p>
         </div>
-      </section>
+      </section>}
 
       {/* Wave Divider */}
       <div className="relative w-full h-24 overflow-hidden bg-white">
@@ -259,7 +296,7 @@ export default function ContactPage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-start">
               {/* Contact Information */}
-              <div
+              {showInfo && <div
                 className={`transition-all duration-700 transform ${
                   isVisible
                     ? "translate-y-0 opacity-100"
@@ -355,7 +392,7 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div className="mt-10 pt-8 border-t border-gray-100">
+                  {showSocials && <div className="mt-10 pt-8 border-t border-gray-100">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">
                       {content.info.connect_title}
                     </h3>
@@ -393,7 +430,7 @@ export default function ContactPage() {
                         <Youtube className="h-5 w-5" />
                       </Link>
                     </div>
-                  </div>
+                  </div>}
 
                   {/* <div className="mt-10 pt-8 border-t border-gray-100">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Working hours</h3>
@@ -409,7 +446,7 @@ export default function ContactPage() {
                     </div>
                   </div> */}
                 </div>
-              </div>
+              </div>}
 
               {/* Contact Form */}
               <div
@@ -730,7 +767,7 @@ export default function ContactPage() {
       </div>
 
       {/* Map */}
-      <section className="py-16 bg-white relative">
+      {showLocation && <section className="py-16 bg-white relative">
         {/* Map SVG Background */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -841,7 +878,7 @@ export default function ContactPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Wave Divider */}
       <div className="relative w-full h-24 overflow-hidden">
@@ -869,7 +906,7 @@ export default function ContactPage() {
       </div>
 
       {/* FAQ */}
-      <section className="py-16 bg-gray-50 relative">
+      {showFaq && <section className="py-16 bg-gray-50 relative">
         {/* FAQ SVG Background */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -935,7 +972,7 @@ export default function ContactPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

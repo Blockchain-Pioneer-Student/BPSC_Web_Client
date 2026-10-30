@@ -21,6 +21,8 @@ import { eventService } from "@/lib/services/eventService";
 import { partnerService } from "@/lib/services/partnerService";
 import JoinPopup from "@/components/join-popup";
 import { ParticlesBackground } from "@/components/particles-background";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { useSiteContent } from "@/hooks/useSiteContent";
 // Define types for data structures
 interface IntroFeature {
   icon: LucideIcon;
@@ -67,6 +69,55 @@ function formatTime(timeString?: string) {
 }
 
 export default function Home() {
+  const homeHero = useSiteContent("home_hero");
+  const homeIntro = useSiteContent("home_intro");
+  const homeEvents = useSiteContent("home_events");
+  const homePartners = useSiteContent("home_partners");
+  const homeCta = useSiteContent("home_cta");
+  const showHero = usePreviewVisible("home_hero");
+  const showIntro = usePreviewVisible("home_intro");
+  const showEvents = usePreviewVisible("home_events");
+  const showPartners = usePreviewVisible("home_partners");
+  const showCta = usePreviewVisible("home_cta");
+  const previewText = (section: Record<string, unknown>, key: string, fallback: string) =>
+    typeof section[key] === "string" && section[key] ? String(section[key]) : fallback;
+
+  const heroEyebrow = previewText(
+    homeHero,
+    "eyebrow",
+    "Vietnam's pioneering Web3 student community",
+  );
+  const heroTitle = previewText(homeHero, "title", "Blockchain Pioneer Student");
+  const heroDescription = previewText(
+    homeHero,
+    "description",
+    "Discover, learn, and grow with the Blockchain community at the University of Transport and Communications.",
+  );
+  const heroImage = previewText(homeHero, "image_url", "/a8fd3637dcec6fb236fd.jpg");
+  const heroCtaLabel = previewText(homeHero, "cta_label", "Join the club");
+  const heroCtaUrl = previewText(homeHero, "cta_url", "/join");
+  const introTitle = previewText(
+    homeIntro,
+    "title",
+    "About Blockchain Pioneer Student Club",
+  );
+  const introDescription = previewText(
+    homeIntro,
+    "description",
+    "The club brings together students passionate about Blockchain and Web3, creating an environment for learning, research, and hands-on practice with future-shaping technologies.",
+  );
+  const eventsTitle = previewText(homeEvents, "title", "Featured activities");
+  const eventsViewAllLabel = previewText(homeEvents, "view_all_label", "View all events");
+  const eventsViewAllUrl = previewText(homeEvents, "view_all_url", "/events");
+  const partnersTitle = previewText(homePartners, "title", "Partners & Sponsors");
+  const ctaTitle = previewText(homeCta, "title", "Ready to join us?");
+  const ctaDescription = previewText(
+    homeCta,
+    "description",
+    "Sign up today to become a member of the Blockchain Pioneer Student Club and start your journey exploring breakthrough technology!",
+  );
+  const ctaPrimaryLabel = previewText(homeCta, "primary_label", "Join the club");
+  const ctaPrimaryUrl = previewText(homeCta, "primary_url", "/join");
   const [introRef, introInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -150,21 +201,30 @@ export default function Home() {
   const introFeatures: IntroFeature[] = [
     {
       icon: BookOpen,
-      title: "Learning",
-      description:
+      title: previewText(homeIntro, "feature_1_title", "Learning"),
+      description: previewText(
+        homeIntro,
+        "feature_1_description",
         "Workshops, seminars, and courses from fundamentals to advanced Blockchain & Web3.",
+      ),
     },
     {
       icon: Users,
-      title: "Community",
-      description:
+      title: previewText(homeIntro, "feature_2_title", "Community"),
+      description: previewText(
+        homeIntro,
+        "feature_2_description",
         "Connect with students, experts, and companies in the Blockchain space.",
+      ),
     },
     {
       icon: Award,
-      title: "Hands-on",
-      description:
+      title: previewText(homeIntro, "feature_3_title", "Hands-on"),
+      description: previewText(
+        homeIntro,
+        "feature_3_description",
         "Join real-world projects, hackathons, and internship opportunities at top tech firms.",
+      ),
     },
   ];
 
@@ -172,26 +232,25 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <ParticlesBackground />
       {/* Hero Banner */}
-      <section className="w-full bg-white">
+      {showHero && <section className="w-full bg-white">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center py-12 md:py-24">
             <div className="space-y-4 text-center lg:text-left">
               <p className="text-sm font-semibold tracking-widest uppercase text-[#004987]">
-                Vietnam&apos;s pioneering Web3 student community
+                {heroEyebrow}
               </p>
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-[#002b52]">
-                Blockchain Pioneer Student
+                {heroTitle}
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400 mx-auto lg:mx-0">
-                Discover, learn, and grow with the Blockchain community at the
-                University of Transport and Communications.
+                {heroDescription}
               </p>
-              <Link href="/join">
+              <Link href={heroCtaUrl}>
                 <Button
                   size="lg"
                   className="bg-[#004987] text-white hover:bg-[#003b6d] shadow-md transform transition-all duration-300 hover:scale-105 hover:shadow-lg mt-3"
                 >
-                  Join the club
+                  {heroCtaLabel}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -200,16 +259,16 @@ export default function Home() {
               alt="Hero"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
               height={550}
-              src="/a8fd3637dcec6fb236fd.jpg"
+              src={heroImage}
               width={550}
               priority
             />
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Quick Introduction */}
-      <section className="py-12 md:py-16 bg-gray-50" ref={introRef}>
+      {showIntro && <section className="py-12 md:py-16 bg-gray-50" ref={introRef}>
         <div className="container px-4 md:px-6">
           <motion.div
             className="text-center mb-12"
@@ -218,7 +277,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-2xl md:text-3xl font-bold text-[#004987] mb-4">
-              About Blockchain Pioneer Student Club
+              {introTitle}
             </h2>
             <motion.div
               className="w-20 h-1 bg-[#004987] mx-auto mb-6"
@@ -227,9 +286,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2 }}
             />
             <p className="max-w-3xl mx-auto text-gray-600 text-sm md:text-base">
-              The club brings together students passionate about Blockchain and
-              Web3, creating an environment for learning, research, and hands-on
-              practice with future-shaping technologies.
+              {introDescription}
             </p>
           </motion.div>
 
@@ -255,10 +312,10 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Featured Activities */}
-      <section className="py-12 md:py-16 bg-gray-50" ref={activitiesRef}>
+      {showEvents && <section className="py-12 md:py-16 bg-gray-50" ref={activitiesRef}>
         <div className="container px-4 md:px-6">
           <motion.div
             className="text-center mb-12"
@@ -267,7 +324,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-2xl md:text-3xl font-bold text-[#004987] mb-4">
-              Featured activities
+              {eventsTitle}
             </h2>
             <motion.div
               className="w-20 h-1 bg-[#004987] mx-auto mb-6"
@@ -396,26 +453,26 @@ export default function Home() {
             animate={activitiesInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Link href="/events">
+              <Link href={eventsViewAllUrl}>
               <Button
                 variant="outline"
                 className="text-[#004987] border-[#004987] hover:bg-[#004987] hover:text-white transition-all duration-300 hover:scale-105"
               >
-                View all events
+                {eventsViewAllLabel}
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
             </Link>
           </motion.div>
         </div>
-      </section>
+      </section>}
 
       {/* Partners Section */}
-      <section className="py-16 bg-white">
+      {showPartners && <section className="py-16 bg-white">
         <div className="container px-4 md:px-6">
           <SectionAnimation>
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-[#004987] mb-4">
-                Partners & Sponsors
+                {partnersTitle}
               </h2>
               <div className="w-20 h-1 bg-[#004987] mx-auto mb-6"></div>
             </div>
@@ -466,10 +523,10 @@ export default function Home() {
           )}
 
         </div>
-      </section>
+      </section>}
 
       {/* Call to Action */}
-      <section
+      {showCta && <section
         className="py-12 md:py-16 bg-gradient-to-r from-[#004987] to-[#0070b8] text-white"
         ref={ctaRef}
       >
@@ -481,11 +538,10 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Ready to join us?
+              {ctaTitle}
             </h2>
             <p className="text-base md:text-lg mb-8 text-white/80">
-              Sign up today to become a member of the Blockchain Pioneer Student
-              Club and start your journey exploring breakthrough technology!
+              {ctaDescription}
             </p>
             <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center"
@@ -493,20 +549,20 @@ export default function Home() {
               animate={ctaInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Link href="/join">
+              <Link href={ctaPrimaryUrl}>
                 <Button
                   size="lg"
                   variant="outline"
                   className="bg-white text-[#004987] hover:bg-gray-100 transition-all duration-300 hover:scale-105"
                 >
-                  Join the club
+                  {ctaPrimaryLabel}
                 </Button>
               </Link>
               <JoinPopup />
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

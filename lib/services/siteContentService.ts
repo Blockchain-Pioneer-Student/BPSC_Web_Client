@@ -27,9 +27,10 @@ export interface ContactContent {
   };
 }
 
-interface SiteContentEntry {
+export interface SiteContentEntry {
   key: string;
   value: Record<string, unknown>;
+  is_visible?: boolean;
 }
 
 // Fallbacks used when the API is unreachable or a field is left empty in admin
@@ -132,6 +133,19 @@ export function buildContactContent(entries: SiteContentEntry[]): ContactContent
 
 // API Service
 export const siteContentService = {
+  async getAllPublic(): Promise<SiteContentEntry[]> {
+    const response = await fetch(`${API_BASE_URL}/site-content`, {
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Unable to load public site content: ${response.status}`);
+    }
+
+    const entries: unknown = await response.json();
+    return Array.isArray(entries) ? entries as SiteContentEntry[] : [];
+  },
+
   // Get contact page content (public endpoint), falling back to defaults on failure
   async getContactContent(init?: RequestInit): Promise<ContactContent> {
     try {
@@ -157,7 +171,33 @@ export const siteContentUtils = {
   },
 };
 
-export type PublicSiteContentKey = 'about_hero' | 'events_page' | 'blogs_page' | 'team_hero';
+export type PublicSiteContentKey =
+  | 'branding'
+  | 'navigation'
+  | 'home_hero'
+  | 'home_intro'
+  | 'home_events'
+  | 'home_partners'
+  | 'home_cta'
+  | 'about_hero'
+  | 'about_mission'
+  | 'about_vision'
+  | 'about_values'
+  | 'about_journey'
+  | 'about_cta'
+  | 'team_hero'
+  | 'events_page'
+  | 'blogs_page'
+  | 'join_hero'
+  | 'join_benefits'
+  | 'join_form'
+  | 'join_faq'
+  | 'contact_hero'
+  | 'contact_info'
+  | 'contact_location'
+  | 'contact_faq'
+  | 'footer'
+  | 'socials';
 
 export interface PublicSiteContent {
   value: Record<string, unknown>;
