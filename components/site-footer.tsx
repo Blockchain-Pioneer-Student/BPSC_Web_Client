@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -10,8 +12,43 @@ import {
   Phone,
   Twitter,
 } from "lucide-react";
+import { usePreviewSection } from "@/components/preview-bridge";
 
 export function SiteFooter() {
+  const branding = usePreviewSection("branding");
+  const footer = usePreviewSection("footer");
+  const socials = usePreviewSection("socials");
+  const contact = usePreviewSection("contact_info");
+  const read = (
+    section: Record<string, unknown>,
+    key: string,
+    fallback: string,
+  ) =>
+    typeof section[key] === "string" && section[key]
+      ? String(section[key])
+      : fallback;
+  const logoUrl = read(branding, "footer_logo_url", "/logo2.png");
+  const logoAlt = read(branding, "logo_alt", "Blockchain Pioneer Student Logo");
+  const description = read(
+    footer,
+    "description",
+    "A pioneering student club advancing Blockchain in Vietnam.",
+  );
+  const email = read(contact, "email", "blockchainutc@gmail.com");
+  const phone = read(contact, "phone", "+84325045633");
+  const address = read(
+    contact,
+    "address",
+    "Blockchain Labs, University of Transport and Communications, 03 Cau Giay, Lang Ward, Hanoi, Vietnam",
+  );
+  const quickLinksTitle = read(footer, "quick_links_title", "Quick links");
+  const joinTitle = read(footer, "join_title", "Join");
+  const contactTitle = read(footer, "contact_title", "Contact");
+  const copyright = read(
+    footer,
+    "copyright_text",
+    "Blockchain Pioneer Student. All rights reserved.",
+  );
   return (
     <footer className="bg-[#004987] text-white">
       <div className="container px-4 md:px-6 py-12">
@@ -19,19 +56,19 @@ export function SiteFooter() {
           <div className="space-y-4">
             <div className="flex items-center gap-2 w-full bg-[#004987] pt-4 pb-0">
               <Image
-                src="/logo2.png"
-                alt="Blockchain Pioneer Student Logo"
+                src={logoUrl}
+                alt={logoAlt}
                 width={180}
                 height={0}
                 style={{ height: "auto" }}
               />
             </div>
             <p className="text-white/80 text-sm">
-              A pioneering student club advancing Blockchain in Vietnam.
+              {description}
             </p>
             <div className="flex gap-4">
               <Link
-                href="https://www.facebook.com/bpsclub.utc"
+                href={read(socials, "facebook", "https://www.facebook.com/bpsclub.utc")}
                 target="_blank"
                 className="hover:text-white/80"
               >
@@ -39,20 +76,20 @@ export function SiteFooter() {
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link
-                href="https://www.linkedin.com/company/106421064/"
+                href={read(socials, "linkedin", "https://www.linkedin.com/company/106421064/")}
                 target="_blank"
                 className="hover:text-white/80"
               >
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
               </Link>
-              <Link href="#" target="_blank" className="hover:text-white/80">
+              <Link href={read(socials, "telegram", "#")} target="_blank" className="hover:text-white/80">
                 <MessageCircle className="h-5 w-5" />
                 <span className="sr-only">Telegram</span>
               </Link>
 
               <Link
-                href="https://x.com/bps_club"
+                href={read(socials, "x", "https://x.com/bps_club")}
                 target="_blank"
                 className="hover:text-white/80"
               >
@@ -67,7 +104,7 @@ export function SiteFooter() {
               </Link>
 
               <Link
-                href="https://www.youtube.com/@BlockchainPioneerStudent"
+                href={read(socials, "youtube", "https://www.youtube.com/@BlockchainPioneerStudent")}
                 target="_blank"
                 className="hover:text-white/80"
               >
@@ -78,7 +115,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4">Quick links</h3>
+            <h3 className="font-semibold text-lg mb-4">{quickLinksTitle}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/about" className="text-white/80 hover:text-white">
@@ -114,7 +151,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4">Join</h3>
+            <h3 className="font-semibold text-lg mb-4">{joinTitle}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/join" className="text-white/80 hover:text-white">
@@ -138,31 +175,30 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4">Contact</h3>
+            <h3 className="font-semibold text-lg mb-4">{contactTitle}</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <MapPin className="h-5 w-5 shrink-0 mt-0.5" />
                 <span className="text-white/80">
-                  Blockchain Labs, University of Transport and Communications,
-                  03 Cau Giay, Lang Ward, Hanoi, Vietnam
+                  {address}
                 </span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-5 w-5" />
                 <Link
-                  href="mailto:blockchainutc@gmail.com"
+                  href={`mailto:${email}`}
                   className="text-white/80 hover:text-white"
                 >
-                  blockchainutc@gmail.com
+                  {email}
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-5 w-5" />
                 <Link
-                  href="tel:+84325045633"
+                  href={`tel:${phone}`}
                   className="text-white/80 hover:text-white"
                 >
-                  +84325045633
+                  {phone}
                 </Link>
               </li>
             </ul>
@@ -171,8 +207,7 @@ export function SiteFooter() {
 
         <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60 text-sm">
           <p>
-            © {new Date().getFullYear()} Blockchain Pioneer Student. All rights
-            reserved.
+            © {new Date().getFullYear()} {copyright}
           </p>
         </div>
       </div>

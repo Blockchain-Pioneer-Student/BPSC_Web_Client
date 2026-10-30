@@ -24,12 +24,13 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value:
+              "frame-ancestors 'self' https://admin-bpsclub.vercel.app http://localhost:8080 http://localhost:8081;",
           },
           {
             key: 'Referrer-Policy',

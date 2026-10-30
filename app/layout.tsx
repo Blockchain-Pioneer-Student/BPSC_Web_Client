@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ParticlesBackground } from "@/components/particles-background";
 import { Toaster } from "@/components/ui/sonner";
+import { PreviewProvider } from "@/components/preview-bridge";
 import {
   organizationSchema,
   websiteSchema,
@@ -202,14 +203,16 @@ export default function RootLayout({
           disableTransitionOnChange
           forcedTheme="light"
         >
-          <div className="relative flex min-h-screen flex-col">
-            <div className="relative">
-              <ParticlesBackground />
+          <PreviewProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <div className="relative">
+                <ParticlesBackground />
+              </div>
+              <SiteHeader />
+              <main className="flex-1">{children}</main>
+              <SiteFooter />
             </div>
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-            <SiteFooter />
-          </div>
+          </PreviewProvider>
           <Toaster />
         </ThemeProvider>
       </body>
