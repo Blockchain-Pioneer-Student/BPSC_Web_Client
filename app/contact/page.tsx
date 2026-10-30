@@ -30,6 +30,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatedDivider } from "@/components/ui/animated-section";
 import { contactService, contactUtils, type ContactFormData } from "@/lib/services/contactService";
+import {
+  siteContentService,
+  siteContentUtils,
+  DEFAULT_CONTACT_CONTENT,
+  type ContactContent,
+} from "@/lib/services/siteContentService";
 
 export default function ContactPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -44,6 +50,7 @@ export default function ContactPage() {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [content, setContent] = useState<ContactContent>(DEFAULT_CONTACT_CONTENT);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,6 +58,10 @@ export default function ContactPage() {
     }, 300);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    siteContentService.getContactContent().then(setContent);
   }, []);
 
 
@@ -144,7 +155,7 @@ export default function ContactPage() {
         <div className="container relative z-10 h-full flex flex-col items-center justify-center text-white text-center px-4 md:px-6">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight animate-fade-in">
             <span className="inline-block transform hover:scale-105 transition-transform duration-300">
-              Contact
+              {content.hero.title}
             </span>
           </h1>
           <AnimatedDivider className="w-24 h-1 bg-white mx-auto mb-8" />
@@ -152,8 +163,7 @@ export default function ContactPage() {
             className="text-lg max-w-2xl animate-slide-in"
             style={{ animationDelay: "200ms" }}
           >
-            Connect with Blockchain Pioneer Student Club — we&apos;re ready to
-            listen and help
+            {content.hero.description}
           </p>
         </div>
       </section>
@@ -286,7 +296,7 @@ export default function ContactPage() {
 
                   <h2 className="text-2xl font-bold text-[#004987] mb-8 flex items-center">
                     <span className="relative">
-                      Contact information
+                      {content.info.title}
                       <span className="absolute -bottom-1 left-0 w-1/3 h-1 bg-gradient-to-r from-[#004987] to-[#00a1e0] rounded-full"></span>
                     </span>
                   </h2>
@@ -301,8 +311,7 @@ export default function ContactPage() {
                           Address
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
-                          Blockchain Labs, University of Transport and
-                          Communications, 03 Cau Giay, Lang Ward, Hanoi, Vietnam
+                          {content.info.address}
                         </p>
                       </div>
                     </div>
@@ -317,10 +326,10 @@ export default function ContactPage() {
                         </h3>
                         <p className="text-gray-600">
                           <Link
-                            href="mailto:blockchainutc@gmail.com"
+                            href={`mailto:${content.info.email}`}
                             className="hover:text-[#00a1e0] transition-colors underline decoration-dotted underline-offset-4"
                           >
-                            blockchainutc@gmail.com
+                            {content.info.email}
                           </Link>
                         </p>
                       </div>
@@ -336,10 +345,10 @@ export default function ContactPage() {
                         </h3>
                         <p className="text-gray-600">
                           <Link
-                            href="tel:+84325045633"
+                            href={siteContentUtils.toTelHref(content.info.phone)}
                             className="hover:text-[#00a1e0] transition-colors underline decoration-dotted underline-offset-4"
                           >
-                            +84 325045633
+                            {content.info.phone}
                           </Link>
                         </p>
                       </div>
@@ -348,11 +357,11 @@ export default function ContactPage() {
 
                   <div className="mt-10 pt-8 border-t border-gray-100">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                      Connect with us
+                      {content.info.connect_title}
                     </h3>
                     <div className="flex gap-4">
                       <Link
-                        href="https://www.facebook.com/bpsclub.utc"
+                        href={content.socials.facebook}
                         target="_blank"
                         className="w-10 h-10 bg-gradient-to-br from-[#004987] to-[#00a1e0] rounded-full flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300"
                         aria-label="Facebook"
@@ -360,7 +369,7 @@ export default function ContactPage() {
                         <Facebook className="h-5 w-5" />
                       </Link>
                       <Link
-                        href="https://www.linkedin.com/company/106421064/"
+                        href={content.socials.linkedin}
                         target="_blank"
                         className="w-10 h-10 bg-gradient-to-br from-[#004987] to-[#00a1e0] rounded-full flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300"
                         aria-label="LinkedIn"
@@ -368,7 +377,7 @@ export default function ContactPage() {
                         <Linkedin className="h-5 w-5" />
                       </Link>
                       <Link
-                        href="#"
+                        href={content.socials.telegram}
                         target="_blank"
                         className="w-10 h-10 bg-gradient-to-br from-[#004987] to-[#00a1e0] rounded-full flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300"
                         aria-label="Telegram"
@@ -376,7 +385,7 @@ export default function ContactPage() {
                         <MessageCircle className="h-5 w-5" />
                       </Link>
                       <Link
-                        href="https://www.youtube.com/@BlockchainPioneerStudent"
+                        href={content.socials.youtube}
                         target="_blank"
                         className="w-10 h-10 bg-gradient-to-br from-[#004987] to-[#00a1e0] rounded-full flex items-center justify-center text-white hover:shadow-lg hover:scale-110 transition-all duration-300"
                         aria-label="Youtube"
@@ -752,11 +761,11 @@ export default function ContactPage() {
         <div className="container px-4 md:px-6 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#004987] to-[#00a1e0] mb-4 inline-block">
-              Map
+              {content.location.title}
             </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-[#004987] to-[#00a1e0] mx-auto mb-6"></div>
             <p className="max-w-3xl mx-auto text-gray-600">
-              Find your way to Blockchain Pioneer Student
+              {content.location.description}
             </p>
           </div>
 
@@ -805,7 +814,7 @@ export default function ContactPage() {
             </div>
 
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.9265586961897!2d105.7999313!3d21.028513!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab424a50fff9%3A0xbe3a7f3670c0a45f!2zVHLGsOG7nW5nIMSQYcyjaSBob8yjYyBHaWFvIHRob8yBbmcgVsOqzKNuIHRhzJlp!5e0!3m2!1svi!2s!4v1650123456789!5m2!1svi!2s"
+              src={content.location.map_embed_url}
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -822,10 +831,10 @@ export default function ContactPage() {
 
           {/* Quick contact button */}
           <div className="mt-6 text-center">
-            <Link href="https://goo.gl/maps/1234" target="_blank">
+            <Link href={content.location.directions_url} target="_blank">
               <Button className="bg-gradient-to-r from-[#004987] to-[#00a1e0] hover:from-[#003b6d] hover:to-[#0081c2] text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg group">
                 <span className="flex items-center gap-2">
-                  Get directions
+                  {content.location.directions_label}
                   <ExternalLink className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </Button>
@@ -896,34 +905,13 @@ export default function ContactPage() {
         <div className="container px-4 md:px-6 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#004987] to-[#00a1e0] mb-4 inline-block">
-              Frequently Asked Questions
+              {content.faq.title}
             </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-[#004987] to-[#00a1e0] mx-auto mb-6"></div>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-6">
-            {[
-              {
-                question: "Which days does the club usually operate?",
-                answer:
-                  "We usually hold sessions on Wednesday evenings and Saturday mornings. Special events are announced on our media channels.",
-              },
-              {
-                question: "How can I join the club?",
-                answer:
-                  "You can register via the online form on our website or contact the board directly via the provided email or phone number.",
-              },
-              {
-                question: "Do I need prior Blockchain knowledge?",
-                answer:
-                  "No. We welcome all students passionate about Blockchain. We provide courses and workshops from beginner to advanced levels.",
-              },
-              {
-                question: "How to become a club partner?",
-                answer:
-                  "Organizations interested in partnering can contact the board via email or fill out the contact form on our website.",
-              },
-            ].map((faq, index) => (
+            {content.faq.items.map((faq, index) => (
               <div
                 key={index}
                 className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01] hover:bg-gradient-to-r hover:from-white hover:to-blue-50/30 group"

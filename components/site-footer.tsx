@@ -10,8 +10,16 @@ import {
   Phone,
   Twitter,
 } from "lucide-react";
+import {
+  siteContentService,
+  siteContentUtils,
+} from "@/lib/services/siteContentService";
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { info, socials } = await siteContentService.getContactContent({
+    next: { revalidate: 60 },
+  });
+
   return (
     <footer className="bg-[#004987] text-white">
       <div className="container px-4 md:px-6 py-12">
@@ -31,7 +39,7 @@ export function SiteFooter() {
             </p>
             <div className="flex gap-4">
               <Link
-                href="https://www.facebook.com/bpsclub.utc"
+                href={socials.facebook}
                 target="_blank"
                 className="hover:text-white/80"
               >
@@ -39,20 +47,20 @@ export function SiteFooter() {
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link
-                href="https://www.linkedin.com/company/106421064/"
+                href={socials.linkedin}
                 target="_blank"
                 className="hover:text-white/80"
               >
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
               </Link>
-              <Link href="#" target="_blank" className="hover:text-white/80">
+              <Link href={socials.telegram} target="_blank" className="hover:text-white/80">
                 <MessageCircle className="h-5 w-5" />
                 <span className="sr-only">Telegram</span>
               </Link>
 
               <Link
-                href="https://x.com/bps_club"
+                href={socials.x}
                 target="_blank"
                 className="hover:text-white/80"
               >
@@ -67,7 +75,7 @@ export function SiteFooter() {
               </Link>
 
               <Link
-                href="https://www.youtube.com/@BlockchainPioneerStudent"
+                href={socials.youtube}
                 target="_blank"
                 className="hover:text-white/80"
               >
@@ -143,26 +151,25 @@ export function SiteFooter() {
               <li className="flex items-start gap-2">
                 <MapPin className="h-5 w-5 shrink-0 mt-0.5" />
                 <span className="text-white/80">
-                  Blockchain Labs, University of Transport and Communications,
-                  03 Cau Giay, Lang Ward, Hanoi, Vietnam
+                  {info.address}
                 </span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-5 w-5" />
                 <Link
-                  href="mailto:blockchainutc@gmail.com"
+                  href={`mailto:${info.email}`}
                   className="text-white/80 hover:text-white"
                 >
-                  blockchainutc@gmail.com
+                  {info.email}
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-5 w-5" />
                 <Link
-                  href="tel:+84325045633"
+                  href={siteContentUtils.toTelHref(info.phone)}
                   className="text-white/80 hover:text-white"
                 >
-                  +84325045633
+                  {info.phone}
                 </Link>
               </li>
             </ul>
