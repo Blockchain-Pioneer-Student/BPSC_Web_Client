@@ -21,7 +21,8 @@ import { eventService } from "@/lib/services/eventService";
 import { partnerService } from "@/lib/services/partnerService";
 import JoinPopup from "@/components/join-popup";
 import { ParticlesBackground } from "@/components/particles-background";
-import { usePreviewSection, usePreviewVisible } from "@/components/preview-bridge";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { useSiteContent } from "@/hooks/useSiteContent";
 // Define types for data structures
 interface IntroFeature {
   icon: LucideIcon;
@@ -68,11 +69,12 @@ function formatTime(timeString?: string) {
 }
 
 export default function Home() {
-  const homeHero = usePreviewSection("home_hero");
-  const homeIntro = usePreviewSection("home_intro");
-  const homeEvents = usePreviewSection("home_events");
-  const homePartners = usePreviewSection("home_partners");
-  const homeCta = usePreviewSection("home_cta");
+  const homeHero = useSiteContent("home_hero");
+  const homeIntro = useSiteContent("home_intro");
+  const homeEvents = useSiteContent("home_events");
+  const homePartners = useSiteContent("home_partners");
+  const homeCta = useSiteContent("home_cta");
+  const showHero = usePreviewVisible("home_hero");
   const showIntro = usePreviewVisible("home_intro");
   const showEvents = usePreviewVisible("home_events");
   const showPartners = usePreviewVisible("home_partners");
@@ -230,7 +232,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <ParticlesBackground />
       {/* Hero Banner */}
-      <section className="w-full bg-white">
+      {showHero && <section className="w-full bg-white">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center py-12 md:py-24">
             <div className="space-y-4 text-center lg:text-left">
@@ -263,7 +265,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Quick Introduction */}
       {showIntro && <section className="py-12 md:py-16 bg-gray-50" ref={introRef}>

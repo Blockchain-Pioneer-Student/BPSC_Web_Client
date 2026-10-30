@@ -32,6 +32,8 @@ import {
   registrationService, 
   type CreateRegistrationDto 
 } from "@/lib/services/registrationService";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { readSiteContent, useSiteContent } from "@/hooks/useSiteContent";
 
 // Schema validation - mapped to backend structure
 const formSchema = z.object({
@@ -102,6 +104,14 @@ type FormFields = keyof FormData;
 
 export default function JoinPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const hero = useSiteContent("join_hero");
+  const benefits = useSiteContent("join_benefits");
+  const formContent = useSiteContent("join_form");
+  const faq = useSiteContent("join_faq");
+  const showHero = usePreviewVisible("join_hero");
+  const showBenefits = usePreviewVisible("join_benefits");
+  const showForm = usePreviewVisible("join_form");
+  const showFaq = usePreviewVisible("join_faq");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -222,32 +232,30 @@ export default function JoinPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Banner */}
-      <section className="relative w-full h-[300px] bg-gradient-to-r from-[#004987] to-[#0070b8] overflow-hidden">
+      {showHero && <section className="relative w-full h-[300px] bg-gradient-to-r from-[#004987] to-[#0070b8] overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-cover bg-center" />
         </div>
         <div className="container relative z-10 h-full flex flex-col items-center justify-center text-white text-center px-4 md:px-6">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Join the Club
+            {readSiteContent(hero, "title", "Join the Club")}
           </h1>
           <p className="text-lg max-w-2xl">
-            Become a member of the Blockchain Pioneer Student Club and start
-            your journey exploring breakthrough technology
+            {readSiteContent(hero, "description", "Become a member of the Blockchain Pioneer Student Club and start your journey exploring breakthrough technology")}
           </p>
         </div>
-      </section>
+      </section>}
 
       {/* Why Join */}
-      <section className="py-16 bg-white">
+      {showBenefits && <section className="py-16 bg-white">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-[#004987] mb-4">
-              Why join the club?
+              {readSiteContent(benefits, "title", "Why join the club?")}
             </h2>
             <div className="w-20 h-1 bg-[#004987] mx-auto mb-6"></div>
             <p className="max-w-3xl mx-auto text-gray-600">
-              Joining the Blockchain Pioneer Student Club brings you
-              opportunities to learn, grow, and connect.
+              {readSiteContent(benefits, "description", "Joining the Blockchain Pioneer Student Club brings you opportunities to learn, grow, and connect.")}
             </p>
           </div>
 
@@ -257,11 +265,10 @@ export default function JoinPage() {
                 <BookOpen className="h-8 w-8 text-[#004987]" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-[#004987]">
-                Learning & Growth
+                {readSiteContent(benefits, "item_1_title", "Learning & Growth")}
               </h3>
               <p className="text-gray-600">
-                Access the latest Blockchain & Web3 knowledge via workshops,
-                seminars, and expert-led courses.
+                {readSiteContent(benefits, "item_1_description", "Access the latest Blockchain & Web3 knowledge via workshops, seminars, and expert-led courses.")}
               </p>
             </div>
 
@@ -270,11 +277,10 @@ export default function JoinPage() {
                 <Users className="h-8 w-8 text-[#004987]" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-[#004987]">
-                Community & Networking
+                {readSiteContent(benefits, "item_2_title", "Community & Networking")}
               </h3>
               <p className="text-gray-600">
-                Meet and connect with students, professionals, and companies in
-                Blockchain and tech.
+                {readSiteContent(benefits, "item_2_description", "Meet and connect with students, professionals, and companies in Blockchain and tech.")}
               </p>
             </div>
 
@@ -283,28 +289,26 @@ export default function JoinPage() {
                 <Award className="h-8 w-8 text-[#004987]" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-[#004987]">
-                Career opportunities
+                {readSiteContent(benefits, "item_3_title", "Career opportunities")}
               </h3>
               <p className="text-gray-600">
-                Access internships, jobs, and real-world projects from our
-                industry partners.
+                {readSiteContent(benefits, "item_3_description", "Access internships, jobs, and real-world projects from our industry partners.")}
               </p>
             </div>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Registration Form */}
-      <section className="py-16 bg-gray-50">
+      {showForm && <section className="py-16 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-[#004987] mb-4">
-              Registration
+              {readSiteContent(formContent, "title", "Registration")}
             </h2>
             <div className="w-20 h-1 bg-[#004987] mx-auto mb-6"></div>
             <p className="max-w-3xl mx-auto text-gray-600">
-              Fill in the form below to apply for membership in the Blockchain
-              Pioneer Student Club
+              {readSiteContent(formContent, "description", "Fill in the form below to apply for membership in the Blockchain Pioneer Student Club")}
             </p>
           </div>
 
@@ -742,20 +746,20 @@ export default function JoinPage() {
                   className="w-full bg-[#004987] hover:bg-[#003b6d]"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Processing..." : "Submit application"}
+                  {isSubmitting ? "Processing..." : readSiteContent(formContent, "submit_label", "Submit application")}
                 </Button>
               </form>
             </Form>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* FAQ */}
-      <section className="py-16 bg-white">
+      {showFaq && <section className="py-16 bg-white">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-[#004987] mb-4">
-              Frequently Asked Questions
+              {readSiteContent(faq, "title", "Frequently Asked Questions")}
             </h2>
             <div className="w-20 h-1 bg-[#004987] mx-auto mb-6"></div>
           </div>
@@ -763,24 +767,20 @@ export default function JoinPage() {
           <div className="max-w-3xl mx-auto space-y-6">
             {[
               {
-                question: "Who can join the Blockchain Pioneer Student Club?",
-                answer:
-                  "All students at the University of Transport and Communications can apply, regardless of faculty, major, or year.",
+                question: readSiteContent(faq, "q1", "Who can join the Blockchain Pioneer Student Club?"),
+                answer: readSiteContent(faq, "a1", "All students at the University of Transport and Communications can apply, regardless of faculty, major, or year."),
               },
               {
-                question: "Do I need prior Blockchain knowledge?",
-                answer:
-                  "No. We welcome all passionate students. We offer courses and workshops from beginner to advanced levels.",
+                question: readSiteContent(faq, "q2", "Do I need prior Blockchain knowledge?"),
+                answer: readSiteContent(faq, "a2", "No. We welcome all passionate students. We offer courses and workshops from beginner to advanced levels."),
               },
               {
-                question: "What is the registration process?",
-                answer:
-                  "Fill out the online application form. The board will review and may contact you for a short interview. You will receive the result via email.",
+                question: readSiteContent(faq, "q3", "What is the registration process?"),
+                answer: readSiteContent(faq, "a3", "Fill out the online application form. The board will review and may contact you for a short interview. You will receive the result via email."),
               },
               {
-                question: "Is there a membership fee?",
-                answer:
-                  "There is a small annual membership fee to sustain activities and events. Fee waivers may be available for students in need.",
+                question: readSiteContent(faq, "q4", "Is there a membership fee?"),
+                answer: readSiteContent(faq, "a4", "There is a small annual membership fee to sustain activities and events. Fee waivers may be available for students in need."),
               },
             ].map((faq, index) => (
               <div key={index} className="bg-gray-50 rounded-lg p-6">
@@ -798,13 +798,13 @@ export default function JoinPage() {
                 variant="outline"
                 className="text-[#004987] border-[#004987] hover:bg-[#004987] hover:text-white"
               >
-                View all questions
+                {readSiteContent(faq, "view_all_label", "View all questions")}
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

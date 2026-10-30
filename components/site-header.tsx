@@ -9,13 +9,15 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMobile } from "@/hooks/use-mobile";
-import { usePreviewSection } from "@/components/preview-bridge";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export function SiteHeader() {
   const isMobile = useMobile();
   const pathname = usePathname();
-  const branding = usePreviewSection("branding");
-  const navigation = usePreviewSection("navigation");
+  const branding = useSiteContent("branding");
+  const navigation = useSiteContent("navigation");
+  const showNavigation = usePreviewVisible("navigation");
   const previewText = (key: string, fallback: string) =>
     typeof navigation[key] === "string" && navigation[key]
       ? String(navigation[key])
@@ -44,6 +46,8 @@ export function SiteHeader() {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
+    if (!showNavigation) return;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -60,7 +64,9 @@ export function SiteHeader() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, showNavigation]);
+
+  if (!showNavigation) return null;
 
   return (
     <header

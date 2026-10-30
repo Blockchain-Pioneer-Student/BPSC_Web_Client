@@ -16,14 +16,14 @@ import { useEvent } from "@/hooks/useEvent";
 import { FilterBar } from "@/components/filter-bar";
 import { EventCard } from "@/components/event-card";
 import { SkeletonCard } from "@/components/skeleton-card";
-import { useSiteContent } from "@/hooks/useSiteContent";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { readSiteContent, useSiteContent } from "@/hooks/useSiteContent";
 
 export default function EventsPage() {
   const router = useRouter();
   const heroContent = useSiteContent("events_page");
-  const heroImage = typeof heroContent.background_image_url === "string"
-    ? heroContent.background_image_url
-    : "";
+  const showPageContent = usePreviewVisible("events_page");
+  const heroImage = readSiteContent(heroContent, "background_image_url", "");
 
   const {
     events: eventData,
@@ -79,7 +79,7 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen">
-      <section
+      {showPageContent && <section
         className="relative py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white overflow-hidden"
         style={heroImage ? { backgroundImage: `url("${encodeURI(heroImage)}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}
       >
@@ -120,16 +120,15 @@ export default function EventsPage() {
         <div className="container relative z-10 px-4 md:px-6">
           <AnimatedSection className="max-w-3xl mx-auto text-center">
             <AnimatedHeading className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              Blockchain Pioneer Student Events
+              {readSiteContent(heroContent, "hero_title", "Blockchain Pioneer Student Events")}
             </AnimatedHeading>
             <AnimatedDivider className="w-24 h-1 bg-white mx-auto mb-8" />
             <p className="text-lg md:text-xl text-white/90 mb-8">
-              Explore events, workshops, and hackathons about Blockchain and
-              Web3
+              {readSiteContent(heroContent, "hero_description", "Explore events, workshops, and hackathons about Blockchain and Web3")}
             </p>
           </AnimatedSection>
         </div>
-      </section>
+      </section>}
 
       <section className="py-16 md:py-24 bg-gray-50" ref={ref}>
         <div className="container px-4 md:px-6">
@@ -217,39 +216,39 @@ export default function EventsPage() {
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-gradient-to-r from-[#004987] to-[#0070b8] text-white">
+      {showPageContent && <section className="py-16 md:py-24 bg-gradient-to-r from-[#004987] to-[#0070b8] text-white">
         <div className="container px-4 md:px-6">
           <AnimatedSection className="max-w-3xl mx-auto text-center">
             <AnimatedHeading className="text-2xl md:text-3xl font-bold mb-4">
-              Want to organize an event with us?
+              {readSiteContent(heroContent, "cta_title", "Want to organize an event with us?")}
             </AnimatedHeading>
             <p className="text-lg mb-8 text-white/90">
-              Contact us to collaborate on Blockchain and Web3 events
+              {readSiteContent(heroContent, "cta_description", "Contact us to collaborate on Blockchain and Web3 events")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact">
+              <Link href={readSiteContent(heroContent, "primary_url", "/contact")}>
                 <Button
                   size="lg"
                   variant="outline"
                   className="bg-white text-[#004987] hover:bg-gray-100 transition-all duration-300 hover:scale-105"
                 >
-                  Contact us
+                  {readSiteContent(heroContent, "primary_label", "Contact us")}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/partners">
+              <Link href={readSiteContent(heroContent, "secondary_url", "/partners")}>
                 <Button
                   size="lg"
                   variant="outline"
                   className="bg-white text-[#004987] hover:bg-gray-100 transition-all duration-300 hover:scale-105"
                 >
-                  Learn more
+                  {readSiteContent(heroContent, "secondary_label", "Learn more")}
                 </Button>
               </Link>
             </div>
           </AnimatedSection>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

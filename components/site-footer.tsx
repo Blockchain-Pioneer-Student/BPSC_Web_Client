@@ -12,13 +12,18 @@ import {
   Phone,
   Twitter,
 } from "lucide-react";
-import { usePreviewSection } from "@/components/preview-bridge";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export function SiteFooter() {
-  const branding = usePreviewSection("branding");
-  const footer = usePreviewSection("footer");
-  const socials = usePreviewSection("socials");
-  const contact = usePreviewSection("contact_info");
+  const branding = useSiteContent("branding");
+  const footer = useSiteContent("footer");
+  const socials = useSiteContent("socials");
+  const contact = useSiteContent("contact_info");
+  const showFooter = usePreviewVisible("footer");
+  const showBranding = usePreviewVisible("branding");
+  const showSocials = usePreviewVisible("socials");
+  const showContact = usePreviewVisible("contact_info");
   const read = (
     section: Record<string, unknown>,
     key: string,
@@ -44,17 +49,37 @@ export function SiteFooter() {
   const quickLinksTitle = read(footer, "quick_links_title", "Quick links");
   const joinTitle = read(footer, "join_title", "Join");
   const contactTitle = read(footer, "contact_title", "Contact");
+  const quickAboutLabel = read(footer, "quick_about_label", "About");
+  const quickAboutUrl = read(footer, "quick_about_url", "/about");
+  const quickEventsLabel = read(footer, "quick_events_label", "Events");
+  const quickEventsUrl = read(footer, "quick_events_url", "/events");
+  const quickNewsLabel = read(footer, "quick_news_label", "News (Coming Soon)");
+  const quickNewsUrl = read(footer, "quick_news_url", "#");
+  const quickMediaLabel = read(footer, "quick_media_label", "Media (Coming Soon)");
+  const quickMediaUrl = read(footer, "quick_media_url", "#");
+  const quickPartnersLabel = read(footer, "quick_partners_label", "Partners (Coming Soon)");
+  const quickPartnersUrl = read(footer, "quick_partners_url", "#");
+  const quickTeamLabel = read(footer, "quick_team_label", "Team");
+  const quickTeamUrl = read(footer, "quick_team_url", "/team");
+  const memberLabel = read(footer, "member_label", "Member");
+  const memberUrl = read(footer, "member_url", "/join");
+  const faqLabel = read(footer, "faq_label", "FAQ (Coming Soon)");
+  const faqUrl = read(footer, "faq_url", "#");
+  const contactLinkLabel = read(footer, "contact_link_label", "Contact");
+  const contactLinkUrl = read(footer, "contact_link_url", "/contact");
   const copyright = read(
     footer,
     "copyright_text",
     "Blockchain Pioneer Student. All rights reserved.",
   );
+  if (!showFooter) return null;
+
   return (
     <footer className="bg-[#004987] text-white">
       <div className="container px-4 md:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 w-full bg-[#004987] pt-4 pb-0">
+            {showBranding && <div className="flex items-center gap-2 w-full bg-[#004987] pt-4 pb-0">
               <Image
                 src={logoUrl}
                 alt={logoAlt}
@@ -62,11 +87,11 @@ export function SiteFooter() {
                 height={0}
                 style={{ height: "auto" }}
               />
-            </div>
+            </div>}
             <p className="text-white/80 text-sm">
               {description}
             </p>
-            <div className="flex gap-4">
+            {showSocials && <div className="flex gap-4">
               <Link
                 href={read(socials, "facebook", "https://www.facebook.com/bpsclub.utc")}
                 target="_blank"
@@ -111,40 +136,40 @@ export function SiteFooter() {
                 <Youtube className="h-5 w-5" />
                 <span className="sr-only">Youtube</span>
               </Link>
-            </div>
+            </div>}
           </div>
 
           <div>
             <h3 className="font-semibold text-lg mb-4">{quickLinksTitle}</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-white/80 hover:text-white">
-                  About
+                <Link href={quickAboutUrl} className="text-white/80 hover:text-white">
+                  {quickAboutLabel}
                 </Link>
               </li>
               <li>
-                <Link href="/events" className="text-white/80 hover:text-white">
-                  Events
+                <Link href={quickEventsUrl} className="text-white/80 hover:text-white">
+                  {quickEventsLabel}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/80 hover:text-white">
-                  News (Coming Soon)
+                <Link href={quickNewsUrl} className="text-white/80 hover:text-white">
+                  {quickNewsLabel}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/80 hover:text-white">
-                  Media (Coming Soon)
+                <Link href={quickMediaUrl} className="text-white/80 hover:text-white">
+                  {quickMediaLabel}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/80 hover:text-white">
-                  Partners (Coming Soon)
+                <Link href={quickPartnersUrl} className="text-white/80 hover:text-white">
+                  {quickPartnersLabel}
                 </Link>
               </li>
               <li>
-                <Link href="/team" className="text-white/80 hover:text-white">
-                  Team
+                <Link href={quickTeamUrl} className="text-white/80 hover:text-white">
+                  {quickTeamLabel}
                 </Link>
               </li>
             </ul>
@@ -154,27 +179,27 @@ export function SiteFooter() {
             <h3 className="font-semibold text-lg mb-4">{joinTitle}</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/join" className="text-white/80 hover:text-white">
-                  Member
+                <Link href={memberUrl} className="text-white/80 hover:text-white">
+                  {memberLabel}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/80 hover:text-white">
-                  FAQ (Coming Soon)
+                <Link href={faqUrl} className="text-white/80 hover:text-white">
+                  {faqLabel}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href={contactLinkUrl}
                   className="text-white/80 hover:text-white"
                 >
-                  Contact
+                  {contactLinkLabel}
                 </Link>
               </li>
             </ul>
           </div>
 
-          <div>
+          {showContact && <div>
             <h3 className="font-semibold text-lg mb-4">{contactTitle}</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
@@ -202,7 +227,7 @@ export function SiteFooter() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div>}
         </div>
 
         <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60 text-sm">

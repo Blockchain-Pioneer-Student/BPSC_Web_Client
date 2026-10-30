@@ -12,14 +12,14 @@ import { useRouter } from "next/navigation";
 import { FilterBar } from "@/components/filter-bar";
 import { BlogCard } from "@/components/blog-card";
 import { SkeletonCard } from "@/components/skeleton-card";
-import { useSiteContent } from "@/hooks/useSiteContent";
+import { usePreviewVisible } from "@/components/preview-bridge";
+import { readSiteContent, useSiteContent } from "@/hooks/useSiteContent";
 
 export default function BlogPage() {
   const router = useRouter();
   const heroContent = useSiteContent("blogs_page");
-  const heroImage = typeof heroContent.background_image_url === "string"
-    ? heroContent.background_image_url
-    : "";
+  const showHero = usePreviewVisible("blogs_page");
+  const heroImage = readSiteContent(heroContent, "background_image_url", "");
   const {
     blogs,
     categories,
@@ -112,7 +112,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen">
-      <section
+      {showHero && <section
         className="relative py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white overflow-hidden"
         style={heroImage ? { backgroundImage: `url("${encodeURI(heroImage)}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}
       >
@@ -158,16 +158,16 @@ export default function BlogPage() {
             className="max-w-3xl mx-auto text-center"
           >
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              News & Events
+              {readSiteContent(heroContent, "hero_title", "News & Events")}
             </h1>
             <AnimatedDivider className="w-24 h-1 bg-white mx-auto mb-8" />
 
             <p className="text-lg md:text-xl text-white/90 mb-8">
-              Stay updated with the latest news and activities of the Blockchain Pioneer Student Club
+              {readSiteContent(heroContent, "hero_description", "Stay updated with the latest news and activities of the Blockchain Pioneer Student Club")}
             </p>
           </motion.div>
         </div>
-      </section>
+      </section>}
 
       <section className="py-16 md:py-24 bg-gray-50" ref={ref}>
         <div className="container px-4 md:px-6">
