@@ -74,7 +74,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "frame-ancestors 'self' https://admin-bpsclub.vercel.app http://localhost:8080 http://localhost:8081;",
+              "frame-ancestors 'self' https://admin-bpsclub.vercel.app http://localhost:8080 http://localhost:8081 https://admin.bpsclub.com ;",
           },
           {
             key: "Referrer-Policy",
