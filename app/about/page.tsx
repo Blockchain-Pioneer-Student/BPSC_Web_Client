@@ -9,13 +9,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { Users, BookOpen, Award, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export default function AboutPage() {
+  const heroContent = useSiteContent("about_hero");
+  const heroImage = typeof heroContent.background_image_url === "string"
+    ? heroContent.background_image_url
+    : "";
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white">
-        <div className="container px-4 md:px-6">
+      <section
+        className="relative overflow-hidden py-20 md:py-32 bg-gradient-to-b from-[#004987] to-[#0070b8] text-white"
+        style={heroImage ? { backgroundImage: `url("${encodeURI(heroImage)}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}
+      >
+        {heroImage && <div className="absolute inset-0 bg-[#00345f]/65" />}
+        <div className="container relative z-10 px-4 md:px-6">
           <AnimatedSection className="max-w-3xl mx-auto text-center">
             <AnimatedHeading className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
               About Blockchain Pioneer Student Club
