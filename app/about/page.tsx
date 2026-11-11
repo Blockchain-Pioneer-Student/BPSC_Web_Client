@@ -186,7 +186,7 @@ export default function AboutPage() {
           </AnimatedSection>
 
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#004987]/20" />
+            <div className="absolute bottom-0 left-[5.75rem] top-0 w-px bg-[#004987]/20 md:left-[9rem]" />
             {[
               {
                 year: readSiteContent(journey, "item_1_year", "04/2024"),
@@ -221,27 +221,25 @@ export default function AboutPage() {
             ].map((milestone, index) => (
               <AnimatedSection
                 key={index}
-                direction={index % 2 === 0 ? "left" : "right"}
-                delay={0.2 * index}
-                className="relative mb-12"
+                direction="up"
+                delay={0.08 * index}
+                className="relative"
               >
-                <div
-                  className={`flex items-center ${
-                    index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                  }`}
-                >
-                  <div className="md:w-1/2">
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                      <div className="text-sm text-[#004987] font-semibold mb-2">
-                        {milestone.year}
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">
-                        {milestone.title}
-                      </h3>
-                      <p className="text-gray-600">{milestone.description}</p>
-                    </div>
+                <div className="grid grid-cols-[5rem_1.5rem_minmax(0,1fr)] items-start gap-x-3 py-6 md:grid-cols-[8rem_2rem_minmax(0,1fr)] md:gap-x-4">
+                  <time className="pt-1 text-right text-sm font-semibold tabular-nums text-[#004987] md:text-base">
+                    {milestone.year}
+                  </time>
+                  <div className="relative z-10 flex justify-center pt-1.5">
+                    <span className="h-3 w-3 rounded-full border-[3px] border-white bg-[#0070b8] ring-1 ring-[#004987]/25" />
                   </div>
-                  <div className="hidden md:block md:w-1/2" />
+                  <div className="min-w-0 border-b border-gray-100 pb-5">
+                    <h3 className="mb-2 text-lg font-bold text-[#004987] md:text-xl">
+                      {milestone.title}
+                    </h3>
+                    <p className="max-w-3xl leading-relaxed text-gray-600">
+                      {milestone.description}
+                    </p>
+                  </div>
                 </div>
               </AnimatedSection>
             ))}
